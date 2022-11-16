@@ -22,6 +22,3 @@ class individuumClass():
 
     def __len__(self):
         return len(self.operation)
-
-    def __str__(self):
-        return str(self.operation)

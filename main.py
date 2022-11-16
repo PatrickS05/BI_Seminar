@@ -3,7 +3,7 @@ import operationClass
 
 
 def out():
-    genetic = geneticHandler.geneticHandler()
+    genetic = geneticHandler.geneticHandler(10, 6)
 
 
 if __name__ == '__main__':
