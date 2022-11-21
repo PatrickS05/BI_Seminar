@@ -16,6 +16,7 @@ class geneticHandler():
         self.crossoverIndividuums()
         self.mutationIndividuum()
         self.selectionIndividuum()
+
     def initialIndividuums(self, anzahl, anzahlOperation):
         for _ in range(anzahl):
             indi = individuum.individuumClass()

@@ -1,16 +1,19 @@
 
-class node():
-    def __int__(self):
-        self.nodeValue = ""
-        self.leftNode = node()
-        self.rightNode = node()
+class Node():
+    def __init__(self, value):
+        self.nodeValue = value
+        self.leftNode = None
+        self.rightNode = None
         self.hasRightNode = False
         self.hasLeftNode = False
-        self.isRootNode = False
-        self.previousNode = node()
+        self.isRoot = False
+        self.previousNode = None
 
     def getLeftNode(self):
         return self.leftNode
+
+    def isRootNode(self):
+        return self.isRoot
 
     def getRightNode(self):
         return self.rightNode
@@ -18,13 +21,31 @@ class node():
     def getNodeValue(self):
         return self.nodeValue
 
-    def hasRightNode(self):
+    def existsRightNode(self):
         return self.hasRightNode
 
-    def hasLeftNode(self):
+    def existsLeftNode(self):
         return self.hasLeftNode
 
     def getPreviosNode(self):
         return self.previousNode
 
+    def addLeftNode(self, node):
+        self.leftNode = node
+        self.hasLeftNode = True
 
+    def addRightNode(self, node):
+        self.rightNode = node
+        self.hasRightNode = True
+
+    def deleteLeftNode(self):
+        self.leftNode = None
+
+    def deleteRightNode(self):
+        self.rightNode = None
+
+    def setToRootNode(self):
+        self.isRoot = True
+
+    def setPreviousNode(self, node):
+        self.previousNode = node
