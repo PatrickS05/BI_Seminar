@@ -1,18 +1,12 @@
+import node
+
+
 class Tree:
-    def __init__(self, root):
+    def __init__(self):
         self.functionalSymbols = ["ADD", "SUB", "MUL", "DIV"]
         self.terminalSymbols = ["X", "Y", "Z"]
         self.nodeList = []
-
-        if str(root.getNodeValue()) in self.functionalSymbols:
-            self.createNode(root)
-            print("Funktionalsymbol")
-        elif str(root.getNodeValue()) in self.terminalSymbols:
-            self.createNode(root)
-            print("Terminalsymbol")
-        else:
-            print("Node konnte nicht erstellt werden. Der Knotenwert ist kein Funktional- oder Terminalsymbol!")
-
+        self.createList = []
     def getRootNode(self):
         return self.root
 
@@ -24,12 +18,20 @@ class Tree:
             return self.nodeList
 
     def __len__(self):
-        return int(len(self.nodeList))
+        return len(self.nodeList)
 
-    def createNode(self, root):
-        self.root = root
-        root.setToRootNode()
-        self.nodeList.append(root)
+    def createTree(self, stringAsTree):
+        self.root = node.Node(stringAsTree[:4])
+        self.root.setToRootNode()
+        self.nodeList.append(self.root)
+        self.createList.append(self.root)
+        for i in range(3, len(stringAsTree), 3):
+            string = stringAsTree[i:i+3]
+            if str(string).__contains__("("):
+                pos = string.find("(")
+                print(stringAsTree[i:i+3])
+            else:
+                print(string)
 
     def getDepth(self):
         depth = 0
@@ -43,22 +45,21 @@ class Tree:
         return depth
 
     def __str__(self):
-        if len(self.nodeList) > 0:
-            treeComplete = False
-            node = self.nodeList[0]
-            i = 0
-            while not treeComplete:
-                print(str(i) + ". -> " + str(node.getNodeValue()))
-                if node.existsLeftNode():
-                    i += 1
-                    left = node.getLeftNode()
-                    string = str(i) + ". -> " + str(left.getNodeValue())
-                if node.existsRightNode():
-                    right = node.getRightNode()
-                    string = " | " + str(right.getNodeValue())
-                if not node.existsRightNode() and i >= len(self.nodeList):
-                    treeComplete = True
-            return string
-        else:
+        if len(self.nodeList) <= 0:
             return "Der Baum ist leer!"
+        treeComplete = False
+        node = self.nodeList[0]
+        i = 0
+        while not treeComplete:
+            print(f"{str(i)}. -> {str(node.getNodeValue())}")
+            if node.existsLeftNode():
+                i += 1
+                left = node.getLeftNode()
+                string = f"{i}. -> {str(left.getNodeValue())}"
+            if node.existsRightNode():
+                right = node.getRightNode()
+                string = f" | {str(right.getNodeValue())}"
+            if not node.existsRightNode() and i >= len(self.nodeList):
+                treeComplete = True
+        return string
 
