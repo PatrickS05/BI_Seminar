@@ -20,18 +20,48 @@ class Tree:
     def __len__(self):
         return len(self.nodeList)
 
+    # SUB(ADD(Y,X),MUL(X,Z))
     def createTree(self, stringAsTree):
-        self.root = node.Node(stringAsTree[:4])
+        self.root = node.Node(stringAsTree[:3])
         self.root.setToRootNode()
         self.nodeList.append(self.root)
         self.createList.append(self.root)
-        for i in range(3, len(stringAsTree), 3):
-            string = stringAsTree[i:i+3]
-            if str(string).__contains__("("):
-                pos = string.find("(")
-                print(stringAsTree[i:i+3])
-            else:
-                print(string)
+        stringAsTree = stringAsTree[3:]
+        for i, char in enumerate(stringAsTree):
+            if char == "(":
+                nodeValue = stringAsTree[i + 1:i + 4]
+                if nodeValue in self.functionalSymbols:
+                    currentNode = node.Node(str(nodeValue))
+                    currentNode.addLeftNode(self.createList[len(self.createList)-1])
+                    currentNode.setPreviousNode(self.createList[len(self.createList)-1])
+                    self.createList.append(currentNode)
+                    print("Node erstellt: " + str(currentNode.getNodeValue()) + " | Vorgängerknoten: " + currentNode.getPreviosNode().getNodeValue())
+                else:
+                    nodeValue = stringAsTree[i + 1]
+                    currentNode = node.Node(str(nodeValue))
+                    currentNode.addLeftNode(self.createList[len(self.createList) - 1])
+                    currentNode.setPreviousNode(self.createList[len(self.createList) - 1])
+                    print("Node erstellt: " + str(
+                        currentNode.getNodeValue()) + " | Vorgängerknoten: " + currentNode.getPreviosNode().getNodeValue())
+            elif char == ",":
+                nodeValue = stringAsTree[i + 1:i + 4]
+                if nodeValue in self.functionalSymbols:
+                    currentNode = node.Node(str(nodeValue))
+                    currentNode.addLeftNode(self.createList[len(self.createList) - 1])
+                    currentNode.setPreviousNode(self.createList[len(self.createList) - 1])
+                    self.createList.append(currentNode)
+                    print("Node erstellt: " + str(
+                        currentNode.getNodeValue()) + " | Vorgängerknoten: " + currentNode.getPreviosNode().getNodeValue())
+                else:
+                    nodeValue = stringAsTree[i + 1]
+                    currentNode = node.Node(str(nodeValue))
+                    currentNode.addRightNode(self.createList[len(self.createList) - 1])
+                    currentNode.setPreviousNode(self.createList[len(self.createList) - 1])
+                    print("Node erstellt: " + str(
+                        currentNode.getNodeValue()) + " | Vorgängerknoten: " + currentNode.getPreviosNode().getNodeValue())
+            elif char == ")":
+                self.createList.pop()
+            print(str(i) + ": Creation List: " + str(self.createList))
 
     def getDepth(self):
         depth = 0

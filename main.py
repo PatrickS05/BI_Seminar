@@ -1,3 +1,4 @@
+import ListSchedulingHandler
 import geneticHandler
 import node
 import tree
@@ -6,8 +7,10 @@ import tree
 #
 
 def out():
-    treeInstance = tree.Tree()
-    treeInstance.createTree("SUB(ADD(X,Y),MUL(Y,Z))")
+    #treeInstance = tree.Tree()
+    #treeInstance.createTree("SUB(ADD(X),MUL(Y,Z))")
+    makespan = ListSchedulingHandler.ListSchedulingHandler()
+    makespan.getMakeSpan([[500,250,300],[75,62,30],[145,750,951]], "SPT")
 
 
 if __name__ == '__main__':
