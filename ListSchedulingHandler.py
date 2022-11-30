@@ -13,3 +13,11 @@ class ListSchedulingHandler():
             print("-----")
         print(array)
 
+    def getProcessingTime(self):
+        return
+
+    def getVariance(self):
+        return
+
+    def getRange(self, zahl1, zahl2):
+        return abs(zahl1 - zahl2)
