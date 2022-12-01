@@ -14,7 +14,11 @@ class ListSchedulingHandler():
         print(array)
 
     def getProcessingTime(self):
-        return
+        operation = {"ADD": lambda x,y: x+y,
+                     "SUB": lambda x,y: x-y,
+                     "MUL": lambda x,y: x*y,
+                     "DIV": lambda x,y: x/y}
+        print(operation["ADD"](50,60))
 
     def getVariance(self):
         return

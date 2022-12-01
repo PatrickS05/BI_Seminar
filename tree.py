@@ -10,9 +10,6 @@ class Tree:
     def getRootNode(self):
         return self.root
 
-    def addNodeToTree(self, node):
-        self.nodeList.append(node)
-
     def getTree(self):
         if self.nodeList is not None:
             return self.nodeList
@@ -32,26 +29,34 @@ class Tree:
                 nodeValue = stringAsTree[i + 1:i + 4]
                 if nodeValue in self.functionalSymbols:
                     currentNode = node.Node(str(nodeValue))
-                    currentNode.addLeftNode(self.createList[len(self.createList)-1])
+                    previousNode = self.createList[len(self.createList)-1]
+                    previousNode.addLeftNode(currentNode)
                     currentNode.setPreviousNode(self.createList[len(self.createList)-1])
                     self.createList.append(currentNode)
                     print("Node erstellt: " + str(currentNode.getNodeValue()) + " | Vorgängerknoten: " + currentNode.getPreviosNode().getNodeValue())
+                    self.nodeList.append(currentNode)
                 else:
                     nodeValue = stringAsTree[i + 1]
                     currentNode = node.Node(str(nodeValue))
+                    previousNode = self.createList[len(self.createList) - 1]
+                    previousNode.addLeftNode(currentNode)
                     currentNode.addLeftNode(self.createList[len(self.createList) - 1])
                     currentNode.setPreviousNode(self.createList[len(self.createList) - 1])
                     print("Node erstellt: " + str(
                         currentNode.getNodeValue()) + " | Vorgängerknoten: " + currentNode.getPreviosNode().getNodeValue())
+                    self.nodeList.append(currentNode)
             elif char == ",":
                 nodeValue = stringAsTree[i + 1:i + 4]
                 if nodeValue in self.functionalSymbols:
                     currentNode = node.Node(str(nodeValue))
-                    currentNode.addLeftNode(self.createList[len(self.createList) - 1])
+                    previousNode = self.createList[len(self.createList) - 1]
+                    previousNode.addRightNode(currentNode)
+                    currentNode.addRightNode(self.createList[len(self.createList) - 1])
                     currentNode.setPreviousNode(self.createList[len(self.createList) - 1])
                     self.createList.append(currentNode)
                     print("Node erstellt: " + str(
                         currentNode.getNodeValue()) + " | Vorgängerknoten: " + currentNode.getPreviosNode().getNodeValue())
+                    self.nodeList.append(currentNode)
                 else:
                     nodeValue = stringAsTree[i + 1]
                     currentNode = node.Node(str(nodeValue))
@@ -59,6 +64,7 @@ class Tree:
                     currentNode.setPreviousNode(self.createList[len(self.createList) - 1])
                     print("Node erstellt: " + str(
                         currentNode.getNodeValue()) + " | Vorgängerknoten: " + currentNode.getPreviosNode().getNodeValue())
+                    self.nodeList.append(currentNode)
             elif char == ")":
                 self.createList.pop()
             print(str(i) + ": Creation List: " + str(self.createList))
