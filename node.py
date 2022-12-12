@@ -8,6 +8,7 @@ class Node():
         self.hasLeftNode = False
         self.isRoot = False
         self.previousNode = None
+        self.rang = -1
 
     def getLeftNode(self):
         return self.leftNode
@@ -49,3 +50,9 @@ class Node():
 
     def setPreviousNode(self, node):
         self.previousNode = node
+
+    def getRang(self):
+        return self.rang
+
+    def setRang(self, rang):
+        self.rang = rang
