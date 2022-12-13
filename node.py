@@ -9,6 +9,13 @@ class Node():
         self.isRoot = False
         self.previousNode = None
         self.rang = -1
+        self.value = None
+
+    def setValue(self, value):
+        self.value = value
+
+    def getValue(self):
+        return self.value
 
     def getLeftNode(self):
         return self.leftNode

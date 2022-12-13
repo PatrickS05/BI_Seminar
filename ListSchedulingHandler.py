@@ -1,27 +1,42 @@
 class ListSchedulingHandler():
     def __int__(self):
-        return
+        self.priorityList = []
 
-    def getMakeSpan(self, array, rule):
-        self.makeSpan = 0
-        if rule == "SPT":
-            for i in range(len(array)):
-                for item in array:
-                    minimum = min(item)
-                    item.remove(minimum)
-                    print("Minimum: " + str(minimum))
-            print("-----")
-        print(array)
+    def getPriorityList(self, treeInstance):
+        operations = {"ADD": lambda x, y: int(x) + int(y),
+                           "SUB": lambda x, y: int(x) - int(y),
+                           "MUL": lambda x, y: int(x) * int(y),
+                           "DIV": lambda x, y: int(x) / int(y)}
+        currentlevel = len(treeInstance.getTreeDictionary())-1
+        currentlevelArray = treeInstance.getTreeDictionary()[currentlevel]
+        rightNode = None
+        leftNode = None
+        while len(currentlevelArray) > 0:
+            node = currentlevelArray[0].getPreviosNode()
+            if node.hasRightNode: rightNode = node.getRightNode()
+            if node.hasLeftNode: leftNode = node.getLeftNode()
+            if rightNode != None and leftNode != None and node.getNodeValue() in treeInstance.getFunctionalSymbols():
+                if rightNode.getNodeValue() in treeInstance.getFunctionalSymbols() and leftNode.getNodeValue() in treeInstance.getFunctionalSymbols():
+                    value = operations[node.getNodeValue()](rightNode.getValue(), leftNode.getValue())
+                    node.setValue(operations[node.getNodeValue()](rightNode.getValue(), leftNode.getValue()))
+                elif rightNode.getNodeValue() in treeInstance.getTerminalSymbols() and leftNode.getNodeValue() in treeInstance.getFunctionalSymbols():
+                    value = operations[node.getNodeValue()](rightNode.getNodeValue(), leftNode.getValue())
+                    node.setValue(operations[node.getNodeValue()](rightNode.getNodeValue(), leftNode.getValue()))
+                elif rightNode.getNodeValue() in treeInstance.getFunctionalSymbols() and leftNode.getNodeValue() in treeInstance.getTerminalSymbols():
+                    value = operations[node.getNodeValue()](rightNode.getValue(), leftNode.getNodeValue())
+                    node.setValue(operations[node.getNodeValue()](rightNode.getValue(), leftNode.getNodeValue()))
+                elif rightNode.getNodeValue() in treeInstance.getTerminalSymbols() and leftNode.getNodeValue() in treeInstance.getTerminalSymbols():
+                    value = operations[node.getNodeValue()](rightNode.getNodeValue(), leftNode.getNodeValue())
+                    node.setValue(operations[node.getNodeValue()](rightNode.getNodeValue(), leftNode.getNodeValue()))
+                if rightNode != None: currentlevelArray.remove(rightNode)
+                if leftNode != None: currentlevelArray.remove(leftNode)
+                if len(currentlevelArray) <= 0 and currentlevel >= 0:
+                    currentlevel -= 1
+                    currentlevelArray = treeInstance.getTreeDictionary()[currentlevel]
+            else:
+                print("Error")
+                break
+            if node.isRootNode():
+                print(f"Root node value: {str(node.getValue())}")
+                break
 
-    def getProcessingTime(self):
-        operation = {"ADD": lambda x,y: x+y,
-                     "SUB": lambda x,y: x-y,
-                     "MUL": lambda x,y: x*y,
-                     "DIV": lambda x,y: x/y}
-        print(operation["ADD"](50,60))
-
-    def getVariance(self):
-        return
-
-    def getRange(self, zahl1, zahl2):
-        return abs(zahl1 - zahl2)
