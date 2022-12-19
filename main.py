@@ -46,7 +46,7 @@ def out():
         print(len(treeInstance))
 
         makeSpan = ListSchedulingHandler.ListSchedulingHandler()
-        makeSpan.getPriorityList(treeInstance)
+        makeSpan.calculatePriorityLevel(treeInstance)
 
     # SUB(ADD(X,Y),MUL(ADD(X,Y),Z))
     # SUB(ADD(X,Y),MUL(Y,Z))

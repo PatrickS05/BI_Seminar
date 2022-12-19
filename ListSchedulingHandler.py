@@ -1,8 +1,8 @@
 class ListSchedulingHandler():
     def __int__(self):
-        self.priorityList = []
+        self.priorityList = {}
 
-    def getPriorityList(self, treeInstance):
+    def calculatePriorityLevel(self, treeInstance):
         operations = {"ADD": lambda x, y: int(x) + int(y),
                            "SUB": lambda x, y: int(x) - int(y),
                            "MUL": lambda x, y: int(x) * int(y),
@@ -38,5 +38,8 @@ class ListSchedulingHandler():
                 break
             if node.isRootNode():
                 print(f"Root node value: {str(node.getValue())}")
+                self.priorityList[treeInstance] = node.getValue()
+                for node in treeInstance.getTree():
+                    node.setValue(None)
                 break
 
