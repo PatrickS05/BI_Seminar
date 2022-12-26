@@ -38,21 +38,20 @@ def out():
                     print("Es wurden noch keine Bäume erstellt!")
     else:
         treeInstance = tree.Tree()
-        treeInstance.createTree("SUB(ADD(2,3),MUL(ADD(4,2),6))")
+        treeInstance.createTree("SUB(ADD(V,S),MUL(ADD(R,S)))")
 
         print(treeInstance)
-        print(treeInstance.getTreeDictionary())
-        print(treeInstance.getDepth())
-        print(len(treeInstance))
 
         makeSpan = ListSchedulingHandler.ListSchedulingHandler()
-        makeSpan.calculatePriorityLevel(treeInstance)
+        #makeSpan.calculatePriorityLevel(treeInstance)
+        makeSpan.fillPriorityList(treeInstance, [[1, 2, 7], [4, 5, 8]])
+        print("Priority List: " + str(makeSpan.getPriorityList()))
 
     # SUB(ADD(X,Y),MUL(ADD(X,Y),Z))
     # SUB(ADD(X,Y),MUL(Y,Z))
+    # [[4,5], [8,6]]
 
-    #makespan = ListSchedulingHandler.ListSchedulingHandler()
-    #makespan.getMakeSpan([[500,250,300],[75,62,30],[145,750,951]], "SPT")
+    #makespan.getMakeSpan([[500,250,300],[75,62,30],[145,750,951]])
     #makespan.getProcessingTime()
 
 

@@ -4,7 +4,7 @@ import node
 class Tree:
     def __init__(self):
         self.functionalSymbols = ["ADD", "SUB", "MUL", "DIV"]
-        self.terminalSymbols = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+        self.terminalSymbols = ["V", "R", "S"]
         self.nodeList = []
         self.createList = []
         self.depth = 0
