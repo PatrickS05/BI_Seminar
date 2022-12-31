@@ -1,14 +1,8 @@
-import individuum
-import operationClass
-
-# ADD: +10
-# SUB: -1
-# MULT: *2
-# DIV: /2
+import evolutionOperationClass
 
 class geneticHandler():
     def __init__(self, anzahl, anzahlOperation):
-        self.op = operationClass.operations()
+        self.op = evolutionOperationClass.evolutionOperations()
         self.individuums = {}
         self.childs = {}
 

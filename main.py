@@ -1,4 +1,4 @@
-import ListSchedulingHandler
+import ListSchedulingHandler, evolutionOperationClass
 import tree
 
 def out():
@@ -37,23 +37,43 @@ def out():
                 else:
                     print("Es wurden noch keine Bäume erstellt!")
     else:
-        treeInstance = tree.Tree()
-        treeInstance.createTree("SUB(ADD(V,S),MUL(ADD(R,S)))")
+        treeInstance1 = tree.Tree()
+        treeInstance1.createTree("SUB(ADD(R,V),DIV(S,V))")
+        print(treeInstance1)
 
-        print(treeInstance)
+        treeInstance2 = tree.Tree()
+        treeInstance2.createTree("ADD(MUL(R,V),MUL(S,V))")
+        print(treeInstance2)
 
+        print("--------------------------------------------------")
+
+        evolution = evolutionOperationClass.evolutionOperations()
+        evolution.makeEvolution([treeInstance1, treeInstance2], [[10, 21, 35, 14, 5], [17, 14, 35, 10, 25]])
+
+
+        """
         makeSpan = ListSchedulingHandler.ListSchedulingHandler()
-        #makeSpan.calculatePriorityLevel(treeInstance)
-        makeSpan.fillPriorityList(treeInstance, [[1, 2, 7], [4, 5, 8]])
+        makeSpan.setTreeInstance(treeInstance)
+        makeSpan.setArrayOfValues([[4,7,18,12,20,8], [5,6,6,7,19,23]])
+        makeSpan.fillPriorityList()
         print("Priority List: " + str(makeSpan.getPriorityList()))
-
+        print("----------------------------------------------")
+        print(f"Makespan: {str(makeSpan.calculateMakeSpan())}")
+        print("----------------------------------------------")
+        """
+        #evolution = evolutionOperationClass.evolutionOperations()
+        #evolution.crossover(treeInstance1, treeInstance2)
+        #print("--------------------------------------------------")
+        #print(f"Mutation:")
+        #evolution.mutation(treeInstance1)
+        #evolution.mutation(treeInstance2)
+        #print("--------------------------------------------------")
+        #fitnessValues = evolution.selection([treeInstance1, treeInstance2], [[4,7,18], [5,6,6], [8,6,10]])
+        #print(f"Fitness Values: {str(fitnessValues)}")
+        #print("--------------------------------------------------")
     # SUB(ADD(X,Y),MUL(ADD(X,Y),Z))
     # SUB(ADD(X,Y),MUL(Y,Z))
     # [[4,5], [8,6]]
-
-    #makespan.getMakeSpan([[500,250,300],[75,62,30],[145,750,951]])
-    #makespan.getProcessingTime()
-
 
 if __name__ == '__main__':
     out()
