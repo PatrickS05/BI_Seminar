@@ -29,7 +29,7 @@ class ListSchedulingHandler():
         operations = {"ADD": lambda x, y: float(x) + float(y),
                            "SUB": lambda x, y: float(x) - float(y),
                            "MUL": lambda x, y: float(x) * float(y),
-                           "DIV": lambda x, y: float(x) / float(y)}
+                           "DIV": lambda x, y: float(x) / (float(y) + 0.001)}
         currentlevel = len(self.treeInstance.getTreeDictionary())-1
         currentlevelArray = currentLevelDict[currentlevel]
         rightNode = None
@@ -93,7 +93,7 @@ class ListSchedulingHandler():
             self.rangeValues = self.calculateRange(self.arrayOfValues)
         if "V" in operations:
             self.varianzValues = self.calculateVarianz(self.arrayOfValues)
-        print(f"Operations: {operations}")
+        #print(f"Operations: {operations}")
         for i in range(len(self.arrayOfValues)):
             for j in range(len(self.arrayOfValues[0])):
                 string = f"{str(j + 1)},{str(i + 1)}"

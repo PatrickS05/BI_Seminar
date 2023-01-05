@@ -1,25 +1,27 @@
 import random, ListSchedulingHandler,copy
-from tqdm import tqdm
 
 class evolutionOperations():
     def __init__(self):
         self.trees = []
     def makeEvolution(self, trees, ArraysOfValues):
         print("Starte Evolution")
-        for i in tqdm(range(3)):
+        for i in range(3):
             print(f"{str(i)}. Generation")
             print("--------------------------------------------------")
-            self.trees = trees
-            availableTrees = self.trees
-            while len(availableTrees) > 1:
-                treeInstance1 = random.choice(availableTrees)
-                availableTrees.remove(treeInstance1)
-                treeInstance2 = random.choice(availableTrees)
-                availableTrees.remove(treeInstance2)
+            if i < 1: self.trees = trees
+            #random.shuffle(self.trees)
+            print("-------------------------")
+            print("CrossOver:")
+            for j in range(0, len(self.trees) // 2, 2):
+                treeInstance1 = self.trees[j]
+                treeInstance2 = self.trees[j + 1]
                 self.crossover(treeInstance1, treeInstance2)
-                print(f"Avialable Trees: {str(availableTrees)}")
+            print("-------------------------")
+            print("Mutationen:")
             for tree in self.trees:
                 self.mutation(tree)
+            print("-------------------------")
+            print("Selection:")
             fitnessValues = self.selection(ArraysOfValues)
             print(f"Fitness Values: {str(fitnessValues)}")
             print("--------------------------------------------------")
@@ -36,27 +38,28 @@ class evolutionOperations():
 
             Returns: None
             """
-        self.trees.append(treeInstance1)
-        self.trees.append(treeInstance2)
+        #self.trees.append(treeInstance1)
+        #self.trees.append(treeInstance2)
         treeInstances = [copy.deepcopy(treeInstance1), copy.deepcopy(treeInstance2)]
-        randomPosTree = [random.randint(1, len(treeInstances[0]) - 1), random.randint(1, len(treeInstances[1]) - 1)]
+        #randomPosTree = [random.randint(1, len(treeInstances[0]) - 1), random.randint(1, len(treeInstances[1]) - 1)]
+        randomPosTree = [1, 2]
         subtrees = []
         for i in range(2):
             subtree = [treeInstances[i].getTree()[randomPosTree[i]]]
             j = 0
             while j < len(subtree):
-                if subtree[j].getLeftNode() is not None and subtree[j].existsLeftNode():
+                if subtree[j].existsLeftNode():
                     subtree.append(subtree[j].getLeftNode())
-                if subtree[j].existsRightNode() and subtree[j].getLeftNode() is not None:
+                if subtree[j].existsRightNode():
                     subtree.append(subtree[j].getRightNode())
                 j += 1
             subtrees.append(subtree)
         oldNodeCopy2 = copy.deepcopy(treeInstances[1].getTree()[randomPosTree[1]])
         treeInstances[0].insertSubtree(subtrees[1], subtrees[1][0], randomPosTree[0])
-        treeInstances[1].insertSubtree(subtrees[0], subtrees[0][0], randomPosTree[1], oldNodeCopy2, secoundTree=True)
         self.trees.append(treeInstances[0])
+        treeInstances[1].insertSubtree(subtrees[0], subtrees[0][0], randomPosTree[1], oldNodeCopy2, secoundTree=True)
         self.trees.append(treeInstances[1])
-        print(f"Position der Subtrees: {str(randomPosTree)}\n")
+        print(f"Position der Subtrees: {randomPosTree}\n")
         print(f"Tree 1: {str(treeInstances[0])}")
         print(f"Tree 2: {str(treeInstances[1])}")
         print(f"Trees: {str(self.trees)}")
@@ -72,7 +75,7 @@ class evolutionOperations():
             else:
                 symbol = random.choice(treeInstance.getFunctionalSymbols())
             node.setNodeValue(symbol)
-            string = f"Mutation an Position {pos} mit dem Symbol {str(symbol)}"
+            print(f"Mutation an Position {pos} mit dem Symbol {str(symbol)}:")
             print(treeInstance)
         print(string)
 

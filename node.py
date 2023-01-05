@@ -1,3 +1,4 @@
+import uuid
 
 class Node():
     def __init__(self, value):
@@ -10,6 +11,7 @@ class Node():
         self.previousNode = None
         self.rang = -1
         self.value = None
+        self.UUID = uuid.uuid1()
 
     def setValue(self, value):
         self.value = value
@@ -41,11 +43,11 @@ class Node():
     def getPreviosNode(self):
         return self.previousNode
 
-    def addLeftNode(self, node):
+    def setLeftNode(self, node):
         self.leftNode = node
         self.hasLeftNode = True
 
-    def addRightNode(self, node):
+    def setRightNode(self, node):
         self.rightNode = node
         self.hasRightNode = True
 
@@ -66,3 +68,9 @@ class Node():
 
     def setRang(self, rang):
         self.rang = rang
+
+    def getUUID(self):
+        return self.UUID
+
+    def generateUUID(self):
+        self.UUID = uuid.uuid1()

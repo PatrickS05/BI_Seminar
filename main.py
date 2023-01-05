@@ -1,5 +1,6 @@
 import ListSchedulingHandler, evolutionOperationClass
 import tree
+import uuid
 
 def out():
     quitAction = "0"
@@ -38,7 +39,7 @@ def out():
                     print("Es wurden noch keine Bäume erstellt!")
     else:
         treeInstance1 = tree.Tree()
-        treeInstance1.createTree("SUB(ADD(R,V),DIV(S,V))")
+        treeInstance1.createTree("SUB(ADD(R,V),SUB(S,V))")
         print(treeInstance1)
 
         treeInstance2 = tree.Tree()
@@ -47,10 +48,21 @@ def out():
 
         print("--------------------------------------------------")
 
-        evolution = evolutionOperationClass.evolutionOperations()
-        evolution.makeEvolution([treeInstance1, treeInstance2], [[10, 21, 35, 14, 5], [17, 14, 35, 10, 25]])
+        #evolution = evolutionOperationClass.evolutionOperations()
+        #evolution.makeEvolution([treeInstance1, treeInstance2], [[10, 21, 35, 14, 5], [17, 14, 35, 10, 25]])
 
+        subtree = treeInstance1.getTree()[1]
+        j = 0
+        while j < len(subtree):
+            if subtree[j].existsLeftNode():
+                subtree.append(subtree[j].getLeftNode())
+            if subtree[j].existsRightNode():
+                subtree.append(subtree[j].getRightNode())
+            j += 1
 
+        treeInstance1.deleteSubtree(subtree)
+
+        print(treeInstance1)
         """
         makeSpan = ListSchedulingHandler.ListSchedulingHandler()
         makeSpan.setTreeInstance(treeInstance)
