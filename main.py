@@ -43,7 +43,7 @@ def out():
         print(treeInstance1)
 
         treeInstance2 = tree.Tree()
-        treeInstance2.createTree("ADD(MUL(R,V),MUL(S,V))")
+        treeInstance2.createTree("ADD(MUL(S,S),MUL(S,V))")
         print(treeInstance2)
 
         print("--------------------------------------------------")
@@ -51,18 +51,27 @@ def out():
         #evolution = evolutionOperationClass.evolutionOperations()
         #evolution.makeEvolution([treeInstance1, treeInstance2], [[10, 21, 35, 14, 5], [17, 14, 35, 10, 25]])
 
-        subtree = treeInstance1.getTree()[1]
+        subtreeForDeletion = [treeInstance1.getTree()[1]]
         j = 0
-        while j < len(subtree):
-            if subtree[j].existsLeftNode():
-                subtree.append(subtree[j].getLeftNode())
-            if subtree[j].existsRightNode():
-                subtree.append(subtree[j].getRightNode())
+        while j < len(subtreeForDeletion):
+            if subtreeForDeletion[j].existsLeftNode():
+                subtreeForDeletion.append(subtreeForDeletion[j].getLeftNode())
+            if subtreeForDeletion[j].existsRightNode():
+                subtreeForDeletion.append(subtreeForDeletion[j].getRightNode())
             j += 1
 
-        treeInstance1.deleteSubtree(subtree)
+        subtreeForInsert = [treeInstance2.getTree()[1]]
+        j = 0
+        while j < len(subtreeForInsert):
+            if subtreeForInsert[j].existsLeftNode():
+                subtreeForInsert.append(subtreeForInsert[j].getLeftNode())
+            if subtreeForInsert[j].existsRightNode():
+                subtreeForInsert.append(subtreeForInsert[j].getRightNode())
+            j += 1
 
+        treeInstance1.insertSubtree(subtreeForInsert, subtreeForDeletion, 1)
         print(treeInstance1)
+
         """
         makeSpan = ListSchedulingHandler.ListSchedulingHandler()
         makeSpan.setTreeInstance(treeInstance)
