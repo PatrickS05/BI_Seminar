@@ -39,62 +39,22 @@ def out():
                     print("Es wurden noch keine Bäume erstellt!")
     else:
         treeInstance1 = tree.Tree()
-        treeInstance1.createTree("SUB(ADD(R,V),SUB(S,V))")
+        treeInstance1.createTree("SUB(ADD(V,R),SUB(S,V))")
         print(treeInstance1)
 
         treeInstance2 = tree.Tree()
-        treeInstance2.createTree("ADD(MUL(S,S),MUL(S,V))")
+        treeInstance2.createTree("ADD(ADD(R,V),MUL(R,V))")
         print(treeInstance2)
 
         print("--------------------------------------------------")
 
         #evolution = evolutionOperationClass.evolutionOperations()
-        #evolution.makeEvolution([treeInstance1, treeInstance2], [[10, 21, 35, 14, 5], [17, 14, 35, 10, 25]])
+        #evolution.makeEvolution([treeInstance1, treeInstance2], [[10, 15], [17, 7]])
 
-        subtreeForDeletion = [treeInstance1.getTree()[1]]
-        j = 0
-        while j < len(subtreeForDeletion):
-            if subtreeForDeletion[j].existsLeftNode():
-                subtreeForDeletion.append(subtreeForDeletion[j].getLeftNode())
-            if subtreeForDeletion[j].existsRightNode():
-                subtreeForDeletion.append(subtreeForDeletion[j].getRightNode())
-            j += 1
-
-        subtreeForInsert = [treeInstance2.getTree()[1]]
-        j = 0
-        while j < len(subtreeForInsert):
-            if subtreeForInsert[j].existsLeftNode():
-                subtreeForInsert.append(subtreeForInsert[j].getLeftNode())
-            if subtreeForInsert[j].existsRightNode():
-                subtreeForInsert.append(subtreeForInsert[j].getRightNode())
-            j += 1
-
-        treeInstance1.insertSubtree(subtreeForInsert, subtreeForDeletion, 1)
-        print(treeInstance1)
-
-        """
-        makeSpan = ListSchedulingHandler.ListSchedulingHandler()
-        makeSpan.setTreeInstance(treeInstance)
-        makeSpan.setArrayOfValues([[4,7,18,12,20,8], [5,6,6,7,19,23]])
-        makeSpan.fillPriorityList()
-        print("Priority List: " + str(makeSpan.getPriorityList()))
-        print("----------------------------------------------")
-        print(f"Makespan: {str(makeSpan.calculateMakeSpan())}")
-        print("----------------------------------------------")
-        """
-        #evolution = evolutionOperationClass.evolutionOperations()
-        #evolution.crossover(treeInstance1, treeInstance2)
-        #print("--------------------------------------------------")
-        #print(f"Mutation:")
-        #evolution.mutation(treeInstance1)
-        #evolution.mutation(treeInstance2)
-        #print("--------------------------------------------------")
-        #fitnessValues = evolution.selection([treeInstance1, treeInstance2], [[4,7,18], [5,6,6], [8,6,10]])
-        #print(f"Fitness Values: {str(fitnessValues)}")
-        #print("--------------------------------------------------")
-    # SUB(ADD(X,Y),MUL(ADD(X,Y),Z))
-    # SUB(ADD(X,Y),MUL(Y,Z))
-    # [[4,5], [8,6]]
+        makespan = ListSchedulingHandler.ListSchedulingHandler()
+        makespan.setTreeInstance(treeInstance1)
+        makespan.setArrayOfValues([[7, 6], [4, 10]])
+        makespan.fillPriorityList()
 
 if __name__ == '__main__':
     out()

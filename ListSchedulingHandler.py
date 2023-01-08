@@ -9,52 +9,79 @@ class ListSchedulingHandler():
 
     def setTreeInstance(self, treeInstance):
         self.treeInstance = treeInstance
+        self.terminal = self.treeInstance.getTerminalSymbols()
+        self.functional = self.treeInstance.getFunctionalSymbols()
 
     def setArrayOfValues(self, arrayOfValues):
         self.arrayOfValues = arrayOfValues
 
     def getValueFromTerminalsymbol(self, symbole, arrayValues, index):
-        value = 0
+        valueOfSymbol = 0
         if symbole == "R":
-            value = self.rangeValues[index]
+            valueOfSymbol = self.rangeValues[index]
         elif symbole == "V":
-            value = self.varianzValues[index]
+            valueOfSymbol = self.varianzValues[index]
         elif symbole == "S":
-            value = arrayValues[index]
-        return value
+            valueOfSymbol = arrayValues[index]
+        return valueOfSymbol
 
-    def calculatePriorityLevel(self, indexOfStartArray, index):
+    def calculatePriorityLevel(self, indexOfMaschine, indexOfJob):
+
+        # Lege die Variable an, um dir den Wert zu merken
         value = 0
+
+        # Erstelle eine Kopie des Baumes
         currentLevelDict = copy.deepcopy(self.treeInstance.getTreeDictionary())
-        operations = {"ADD": lambda x, y: float(x) + float(y),
-                           "SUB": lambda x, y: float(x) - float(y),
-                           "MUL": lambda x, y: float(x) * float(y),
-                           "DIV": lambda x, y: float(x) / (float(y) + 0.001)}
-        currentlevel = len(self.treeInstance.getTreeDictionary())-1
+
+        # Definiere die Funktionen der Funktionalsymbole
+        operations = {"ADD": lambda x, y: float(x if x is not None else 0) + float(y if y is not None else 0),
+                      "SUB": lambda x, y: float(x if x is not None else 0) - float(y if y is not None else 0),
+                      "MUL": lambda x, y: float(x if x is not None else 1) * float(y if y is not None else 1),
+                      "DIV": lambda x, y: float(x if x is not None else 1) / (float(y if y is not None else 1) + 0.001)}
+
+        # Bestimme die vorletzte Ebene des Baumes aus dem Dictionary
+        currentlevel = len(self.treeInstance.getTreeDictionary())-2
+
+        # Speichere die zu bearbeitende Ebene aus dem Dictionary ab
         currentlevelArray = currentLevelDict[currentlevel]
-        rightNode = None
-        leftNode = None
+        currentNode = None
+
+        # Gehe alle Ebenen des Baumes durch
+        for node in range(len(currentlevelArray)):
+            currentNode = node
+            if currentNode.getNodeValue() in self.functional:
+                leftNode = currentNode.getLeftNode()
+                rightNode = currentNode.getRightNode()
+                if leftNode.getNodeValue() in self.functional and rightNode.getNodeValue() in self.functional:
+                    currentNode.setValue(operations[currentNode.getNodeValue()](leftNode.getValue(), rightNode.getValue()))
+                elif leftNode.getNodeValue() in self.functional and rightNode.getNodeValue() in self.terminal:
+                    currentNode.setValue(operations[currentNode.getNodeValue()](leftNode.getValue(), self.getValueFromTerminalsymbol(rightNode.getNodeValue(), self.arrayOfValues[indexOfMaschine], indexOfJob)))
+                elif leftNode.getNodeValue() in self.terminal and rightNode.getNodeValue() in self.functional:
+                    currentNode.setValue(operations[currentNode.getNodeValue()](self.getValueFromTerminalsymbol(leftNode.getNodeValue(), self.arrayOfValues[indexOfMaschine], indexOfJob), rightNode.getValue()))
+                elif leftNode.getNodeValue() in self.terminal and rightNode.getNodeValue() in self.terminal:
+                    currentNode.setValue(operations[currentNode.getNodeValue()](self.getValueFromTerminalsymbol(leftNode.getNodeValue(), self.arrayOfValues[indexOfMaschine], indexOfJob), self.getValueFromTerminalsymbol(rightNode.getNodeValue(), self.arrayOfValues[indexOfMaschine], indexOfJob)))
+        value = currentNode.getValue()
+        print(f"Wert: {value}")
+
+        """
         while len(currentlevelArray) > 0:
             node = currentlevelArray[0].getPreviosNode()
             if node.hasRightNode: rightNode = node.getRightNode()
             if node.hasLeftNode: leftNode = node.getLeftNode()
             if rightNode != None and leftNode != None and node.getNodeValue() in self.treeInstance.getFunctionalSymbols():
                 if rightNode.getNodeValue() in self.treeInstance.getFunctionalSymbols() and leftNode.getNodeValue() in self.treeInstance.getFunctionalSymbols():
-                    tempValue = operations[node.getNodeValue()](leftNode.getValue(),rightNode.getValue())
                     node.setValue(operations[node.getNodeValue()](leftNode.getValue(),rightNode.getValue()))
                 elif rightNode.getNodeValue() in self.treeInstance.getTerminalSymbols() and leftNode.getNodeValue() in self.treeInstance.getFunctionalSymbols():
-                    tempValue = operations[node.getNodeValue()](leftNode.getValue(), self.getValueFromTerminalsymbol(rightNode.getNodeValue(), self.arrayOfValues[indexOfStartArray], index))
                     node.setValue(operations[node.getNodeValue()](leftNode.getValue(), self.getValueFromTerminalsymbol(rightNode.getNodeValue(), self.arrayOfValues[indexOfStartArray], index)))
                 elif rightNode.getNodeValue() in self.treeInstance.getFunctionalSymbols() and leftNode.getNodeValue() in self.treeInstance.getTerminalSymbols():
-                    tempValue = operations[node.getNodeValue()](self.getValueFromTerminalsymbol(leftNode.getNodeValue(), self.arrayOfValues[indexOfStartArray], index), rightNode.getValue())
                     node.setValue(operations[node.getNodeValue()](self.getValueFromTerminalsymbol(leftNode.getNodeValue(), self.arrayOfValues[indexOfStartArray], index), rightNode.getValue()))
                 elif rightNode.getNodeValue() in self.treeInstance.getTerminalSymbols() and leftNode.getNodeValue() in self.treeInstance.getTerminalSymbols():
                     valueRight = self.getValueFromTerminalsymbol(rightNode.getNodeValue(), self.arrayOfValues[indexOfStartArray], index)
                     valueLeft = self.getValueFromTerminalsymbol(leftNode.getNodeValue(), self.arrayOfValues[indexOfStartArray], index)
-                    tempValue = operations[node.getNodeValue()](valueLeft, valueRight)
                     node.setValue(operations[node.getNodeValue()](valueLeft, valueRight))
-                if rightNode != None: currentlevelArray.remove(rightNode)
-                if leftNode != None: currentlevelArray.remove(leftNode)
+                if leftNode in currentlevelArray or rightNode in currentlevelArray:
+                    if rightNode != None: currentlevelArray.remove(rightNode)
+                    if leftNode != None: currentlevelArray.remove(leftNode)
                 if len(currentlevelArray) <= 0 and currentlevel >= 0:
                     currentlevel -= 1
                     currentlevelArray = currentLevelDict[currentlevel]
@@ -62,11 +89,12 @@ class ListSchedulingHandler():
                 print("Error")
                 break
             if node.isRootNode():
-                print(f"Root node value: {str(node.getValue())}")
+                #print(f"Root node value: {str(node.getValue())}")
                 value = node.getValue()
                 for node in self.treeInstance.getTree():
                     node.setValue(None)
                 break
+        """
         return value
 
     def calculateRange(self, arrayOfValues):
@@ -94,10 +122,10 @@ class ListSchedulingHandler():
         if "V" in operations:
             self.varianzValues = self.calculateVarianz(self.arrayOfValues)
         #print(f"Operations: {operations}")
-        for i in range(len(self.arrayOfValues)):
-            for j in range(len(self.arrayOfValues[0])):
-                string = f"{str(j + 1)},{str(i + 1)}"
-                value = self.calculatePriorityLevel(i, j)
+        for machine in range(len(self.arrayOfValues)):
+            for job in range(len(self.arrayOfValues[0])):
+                string = f"{str(job + 1)},{str(machine + 1)}"
+                value = self.calculatePriorityLevel(machine, job)
                 tempDict[string] = value
         sortedValueDict = sorted(tempDict.values(), reverse=True)
         for value in sortedValueDict:
@@ -128,6 +156,4 @@ class ListSchedulingHandler():
             jobsStart[job] = tempJobStart
             jobsEnd[job] = tempJobEnd
         print(f"Maschinen: {str(currentCount)}")
-        print(f"Job Start: {jobsStart}")
-        print(f"Job Ende: {jobsEnd}")
         return max(currentCount)

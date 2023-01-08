@@ -9,7 +9,7 @@ class evolutionOperations():
             print(f"{str(i)}. Generation")
             print("--------------------------------------------------")
             if i < 1: self.trees = trees
-            #random.shuffle(self.trees)
+            random.shuffle(self.trees)
             print("-------------------------")
             print("CrossOver:")
             for j in range(0, len(self.trees) // 2, 2):
@@ -41,8 +41,7 @@ class evolutionOperations():
         #self.trees.append(treeInstance1)
         #self.trees.append(treeInstance2)
         treeInstances = [copy.deepcopy(treeInstance1), copy.deepcopy(treeInstance2)]
-        #randomPosTree = [random.randint(1, len(treeInstances[0]) - 1), random.randint(1, len(treeInstances[1]) - 1)]
-        randomPosTree = [1, 2]
+        randomPosTree = [random.randint(1, len(treeInstances[0]) - 1), random.randint(1, len(treeInstances[1]) - 1)]
         subtrees = []
         for i in range(2):
             subtree = [treeInstances[i].getTree()[randomPosTree[i]]]
@@ -54,10 +53,9 @@ class evolutionOperations():
                     subtree.append(subtree[j].getRightNode())
                 j += 1
             subtrees.append(subtree)
-        oldNodeCopy2 = copy.deepcopy(treeInstances[1].getTree()[randomPosTree[1]])
-        treeInstances[0].insertSubtree(subtrees[1], subtrees[1][0], randomPosTree[0])
+        treeInstances[0].insertSubtree(copy.deepcopy(subtrees[1]), copy.deepcopy(subtrees[0]), randomPosTree[0])
         self.trees.append(treeInstances[0])
-        treeInstances[1].insertSubtree(subtrees[0], subtrees[0][0], randomPosTree[1], oldNodeCopy2, secoundTree=True)
+        treeInstances[1].insertSubtree(copy.deepcopy(subtrees[0]), copy.deepcopy(subtrees[1]), randomPosTree[1])
         self.trees.append(treeInstances[1])
         print(f"Position der Subtrees: {randomPosTree}\n")
         print(f"Tree 1: {str(treeInstances[0])}")

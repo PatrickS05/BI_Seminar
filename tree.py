@@ -1,3 +1,5 @@
+import uuid
+
 import node, copy
 
 
@@ -31,16 +33,22 @@ class Tree:
             if item.getUUID() == uuid:
                 return item
 
-    def insertSubtree(self, subtreeForInsert, subtreeForDeletion, oldNodeIndex, oldNodeCopy=None, secoundTree=False):
+    def getSubtreeNodeByUUID(self, uuid, subtree):
+        for item in subtree:
+            if item.getUUID() == uuid:
+                return item
+
+    def removeValuesFromTree(self):
+        for item in self.nodeList:
+            item.setNodeValue(None)
+
+    def insertSubtree(self, subtreeForInsert, subtreeForDeletion, oldNodeIndex):
 
         # Merke dir den alten Knoten in diesem Baum
         oldNode = self.getTree()[oldNodeIndex]
 
         # Erstelle eine Kopie des neuen Knotens der in diesen Baum eingefügt werden soll
         newNodeCopy = copy.deepcopy(subtreeForInsert[0])
-
-        # Erzeuge eine neue UUID für den neuen Knoten
-        newNodeCopy.generateUUID()
 
         # Merke dir den Vorgänger des alten Knotens
         previousNode = oldNode.getPreviosNode()
@@ -63,20 +71,29 @@ class Tree:
         elif direction == "right":
             previousNode.setRightNode(newNodeCopy)
 
+        # Lösche den neuen Knoten aus der Menge der Knoten, die noch eingefügt werden müssen (Subtree)
+        subtreeForInsert.remove(self.getSubtreeNodeByUUID(newNodeCopy.getUUID(), subtreeForInsert))
+
+        # Erzeuge eine neue UUID für den neuen Knoten
+        newNodeCopy.generateUUID()
+
         # Füge den neuen Knoten in den Baum ein mit dem Index des alten Knotens, um die Baumstruktur zu erhalten
         self.nodeList.insert(oldNodeIndex, newNodeCopy)
 
         # Füge den neuen Knoten in das Baum Dictionary ein
         self.treeDictionary[newNodeCopy.getRang()].append(newNodeCopy)
 
-        # Lösche den neuen Knoten aus der Menge der Knoten, die noch eingefügt werden müssen (Subtree)
-        subtreeForInsert.remove(subtreeForInsert[0].getTreeNodeByUUID(newNodeCopy.getUUID()))
-
         # Iteriere über alle übrigen Knoten des Subtrees
         for i, item in enumerate(subtreeForInsert, start=1):
+            # wenn die Liste mehr als zwei Knoten enthält, muss der Vorgänger des neuen Knotens gesetzt werden
+            if i == 1 or i == 2:
+                item.setPreviousNode(newNodeCopy)
 
             # Aktualisiere die Ebene von jedem Knoten des Subtrees
             item.setRang(item.getPreviosNode().getRang() + 1)
+
+            # Aktualisiere die UUID des Knotens
+            item.generateUUID()
 
             # Füge den Knoten des Subtrees in den Baum ein nach dem neuen Knoten (Für die Darstellung wichtig)
             self.nodeList.insert(oldNodeIndex + i, item)
@@ -134,10 +151,11 @@ class Tree:
             print("---------------")
 
     def delNodeFromTree(self, node):
-        self.getTree().remove(node)
-        self.treeDictionary[node.getRang()].remove(node)
-        if len(self.treeDictionary[node.getRang()]) == 0:
-            del (self.treeDictionary[node.getRang()])
+        delNode = self.getTreeNodeByUUID(node.getUUID())
+        self.getTree().remove(delNode)
+        self.treeDictionary[delNode.getRang()].remove(delNode)
+        if len(self.treeDictionary[delNode.getRang()]) == 0:
+            del (self.treeDictionary[delNode.getRang()])
 
     def __len__(self):
         return len(self.nodeList)
@@ -190,13 +208,13 @@ class Tree:
                     currentNode.setPreviousNode(self.createList[len(self.createList) - 1])
                     previousNode.setRightNode(currentNode)
                 self.updateRang(currentNode, rang)
-            print(f"{str(i)}: Creation List: {str(self.createList)}")
+            #print(f"{str(i)}: Creation List: {str(self.createList)}")
         print("--------------------------------------------------")
 
     def updateRang(self, currentNode, rang):
-        print(
-            f"Node erstellt: {str(currentNode.getNodeValue())} | Vorgängerknoten: {currentNode.getPreviosNode().getNodeValue()}"
-        )
+        #print(
+        #    f"Node erstellt: {str(currentNode.getNodeValue())} | Vorgängerknoten: {currentNode.getPreviosNode().getNodeValue()}"
+        #)
         self.nodeList.append(currentNode)
         currentNode.setRang(rang)
         if rang in self.treeDictionary:
@@ -214,7 +232,7 @@ class Tree:
             string = "".join(
                 item.getNodeValue() + ".0: Root \n"
                 if item.isRootNode()
-                else f"{item.getNodeValue()}.{str(item.getRang())}: {item.getPreviosNode().getNodeValue()}.{str(item.getPreviosNode().getRang())}"
+                else str(item)
                 + "\n"
                 for item in self.nodeList
             )

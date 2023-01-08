@@ -74,3 +74,9 @@ class Node():
 
     def generateUUID(self):
         self.UUID = uuid.uuid1()
+
+    def __str__(self):
+        if self.isRoot:
+            return f"Root: {self.nodeValue}"
+        else:
+            return f"{self.nodeValue}.{self.rang}: {self.getPreviosNode().getNodeValue()}.{self.getPreviosNode().getRang()}"
