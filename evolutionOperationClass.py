@@ -5,23 +5,26 @@ class evolutionOperations():
         self.trees = []
     def makeEvolution(self, trees, ArraysOfValues):
         print("Starte Evolution")
-        for i in range(3):
+        for i in range(5):
             print(f"{str(i)}. Generation")
             print("--------------------------------------------------")
             if i < 1: self.trees = trees
             random.shuffle(self.trees)
             print("-------------------------")
-            print("CrossOver:")
-            for j in range(0, len(self.trees) // 2, 2):
+            print("CROSSOVER:")
+            print("-------------------------")
+            for j in range(len(self.trees) // 2):
                 treeInstance1 = self.trees[j]
                 treeInstance2 = self.trees[j + 1]
                 self.crossover(treeInstance1, treeInstance2)
             print("-------------------------")
-            print("Mutationen:")
+            print("MUTATION:")
+            print("-------------------------")
             for tree in self.trees:
                 self.mutation(tree)
             print("-------------------------")
-            print("Selection:")
+            print("SELEKTION:")
+            print("-------------------------")
             fitnessValues = self.selection(ArraysOfValues)
             print(f"Fitness Values: {str(fitnessValues)}")
             print("--------------------------------------------------")
@@ -74,7 +77,6 @@ class evolutionOperations():
                 symbol = random.choice(treeInstance.getFunctionalSymbols())
             node.setNodeValue(symbol)
             print(f"Mutation an Position {pos} mit dem Symbol {str(symbol)}:")
-            print(treeInstance)
         print(string)
 
     def selection(self, ArraysOfValues):
@@ -85,16 +87,15 @@ class evolutionOperations():
             makespan.setArrayOfValues(ArraysOfValues)
             makespan.fillPriorityList()
             fitnessValues[tree] = makespan.calculateMakeSpan()
-        return fitnessValues
-
-    def getFitnessValue(self, treeInstance, arraysOfValues):
-        makeSpan = ListSchedulingHandler.ListSchedulingHandler()
-        makeSpan.setTreeInstance(treeInstance)
-        makeSpan.setArrayOfValues(arraysOfValues)
-        makeSpan.fillPriorityList()
-        print(f"Priority List: {str(makeSpan.getPriorityList())}")
-        print("----------------------------------------------")
-        print(f"Makespan: {str(makeSpan.calculateMakeSpan())}")
-        print("----------------------------------------------")
-
+        if len(fitnessValues) > 6:
+            for i in range(2):
+                if i == 0:
+                    self.trees = [min(fitnessValues, key=lambda fitness: fitnessValues[fitness])]
+                else:
+                    self.trees.append(max(fitnessValues, key=lambda fitness: fitnessValues[fitness]))
+                del fitnessValues[self.trees[i]]
+            for _ in range(len(fitnessValues)//2):
+                choise1 = random.choice(fitnessValues.keys())
+                choise2 = random.choice(fitnessValues.keys())
+                self.trees.append(max(fitnessValues[choise1], fitnessValues[choise2]))
 

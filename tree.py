@@ -1,5 +1,7 @@
 import uuid
 
+from pygame.time import delay
+
 import node, copy
 
 
@@ -145,17 +147,20 @@ class Tree:
 
                 # Lösche den Knoten aus dem Baum
                 self.delNodeFromTree(currentNode)
-            print("Subtree deleted")
-            print("---------------")
-            print(self)
-            print("---------------")
+            #print("Subtree deleted")
+            #print("---------------")
+            #print(self)
+            #print("---------------")
 
     def delNodeFromTree(self, node):
         delNode = self.getTreeNodeByUUID(node.getUUID())
-        self.getTree().remove(delNode)
-        self.treeDictionary[delNode.getRang()].remove(delNode)
-        if len(self.treeDictionary[delNode.getRang()]) == 0:
-            del (self.treeDictionary[delNode.getRang()])
+        if delNode in self.getTree():
+            self.getTree().remove(delNode)
+        if delNode is not None:
+            if delNode in self.treeDictionary[delNode.getRang()]:
+                self.treeDictionary[delNode.getRang()].remove(delNode)
+                if len(self.treeDictionary[delNode.getRang()]) == 0:
+                    del (self.treeDictionary[delNode.getRang()])
 
     def __len__(self):
         return len(self.nodeList)

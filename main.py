@@ -48,13 +48,21 @@ def out():
 
         print("--------------------------------------------------")
 
-        #evolution = evolutionOperationClass.evolutionOperations()
-        #evolution.makeEvolution([treeInstance1, treeInstance2], [[10, 15], [17, 7]])
+        evolution = evolutionOperationClass.evolutionOperations()
+        evolution.makeEvolution([treeInstance1, treeInstance2], [[10, 15], [17, 7]])
 
-        makespan = ListSchedulingHandler.ListSchedulingHandler()
-        makespan.setTreeInstance(treeInstance1)
-        makespan.setArrayOfValues([[7, 6], [4, 10]])
-        makespan.fillPriorityList()
+        #dict1 = {}
+        #tempDict = {'2,2': 999.0, '2,1': 1007.0, '1,1': 585.75, '1,2': 592.75}
+        #sortedValueDict = sorted(tempDict.values(), reverse=True)
+        #for value in sortedValueDict:
+            #dict1.update({key: value for key, val in tempDict.items() if val == value})
+
+        #print(dict1)
+
+        #makespan = ListSchedulingHandler.ListSchedulingHandler()
+        #makespan.setTreeInstance(treeInstance1)
+        #makespan.setArrayOfValues([[7, 6], [4, 10]])
+        #makespan.fillPriorityList()
 
 if __name__ == '__main__':
     out()
