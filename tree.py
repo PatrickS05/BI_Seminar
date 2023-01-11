@@ -1,7 +1,4 @@
 import uuid
-
-from pygame.time import delay
-
 import node, copy
 
 
@@ -107,10 +104,10 @@ class Tree:
             # Wenn diese Ebene im Baum noch nicht existiert, erstelle die Ebene und füge den Knoten der Ebene hinzu
             else:
                 self.treeDictionary[item.getRang()] = [item]
-        print("Subtree inserted")
-        print("---------------")
-        print(self)
-        print("---------------")
+        #print("Subtree inserted")
+        #print("---------------")
+        #print(self)
+        #print("---------------")
 
     def deleteSubtree(self, subtree):
         currentNode = subtree[0]
@@ -147,6 +144,14 @@ class Tree:
 
                 # Lösche den Knoten aus dem Baum
                 self.delNodeFromTree(currentNode)
+
+            # Überprüfe alle Knoten ob sie einen existierenden Vorgänger besitzen
+            for checkNode in self.getTree():
+                if checkNode.isRootNode():
+                    continue
+                elif checkNode.getPreviosNode() is None:
+                    self.getTree().remove(checkNode)
+                    del checkNode
             #print("Subtree deleted")
             #print("---------------")
             #print(self)
@@ -154,13 +159,16 @@ class Tree:
 
     def delNodeFromTree(self, node):
         delNode = self.getTreeNodeByUUID(node.getUUID())
-        if delNode in self.getTree():
+        try:
+            # if delNode in self.getTree():
             self.getTree().remove(delNode)
-        if delNode is not None:
-            if delNode in self.treeDictionary[delNode.getRang()]:
-                self.treeDictionary[delNode.getRang()].remove(delNode)
-                if len(self.treeDictionary[delNode.getRang()]) == 0:
-                    del (self.treeDictionary[delNode.getRang()])
+            # if delNode is not None:
+            # if delNode in self.treeDictionary[delNode.getRang()]:
+            self.treeDictionary[delNode.getRang()].remove(delNode)
+            if len(self.treeDictionary[delNode.getRang()]) == 0:
+                del (self.treeDictionary[delNode.getRang()])
+        except(ValueError):
+            print(f"Node not found: {str(node)}, {str(delNode)}")
 
     def __len__(self):
         return len(self.nodeList)

@@ -39,30 +39,28 @@ def out():
                     print("Es wurden noch keine Bäume erstellt!")
     else:
         treeInstance1 = tree.Tree()
-        treeInstance1.createTree("SUB(ADD(V,R),SUB(S,V))")
-        print(treeInstance1)
+        treeString1 = "SUB(ADD(R,DIV(R,S)),DIV(ADD(R,V),MUL(V,S)))"
+        tree1valid = False
+        if treeString1.count("(") == treeString1.count(")"):
+            treeInstance1.createTree(treeString1)
+            tree1valid = True
+            print(treeInstance1)
 
         treeInstance2 = tree.Tree()
-        treeInstance2.createTree("ADD(ADD(R,V),MUL(R,V))")
-        print(treeInstance2)
+        treeString2 = "ADD(ADD(R,SUB(R,V)),MUL(ADD(S,R),DIV(R,S)))"
+        tree2valid = False
+        if treeString2.count("(") == treeString2.count(")"):
+            treeInstance2.createTree(treeString2)
+            tree2valid = True
+            print(treeInstance2)
 
         print("--------------------------------------------------")
 
-        evolution = evolutionOperationClass.evolutionOperations()
-        evolution.makeEvolution([treeInstance1, treeInstance2], [[10, 15], [17, 7]])
-
-        #dict1 = {}
-        #tempDict = {'2,2': 999.0, '2,1': 1007.0, '1,1': 585.75, '1,2': 592.75}
-        #sortedValueDict = sorted(tempDict.values(), reverse=True)
-        #for value in sortedValueDict:
-            #dict1.update({key: value for key, val in tempDict.items() if val == value})
-
-        #print(dict1)
-
-        #makespan = ListSchedulingHandler.ListSchedulingHandler()
-        #makespan.setTreeInstance(treeInstance1)
-        #makespan.setArrayOfValues([[7, 6], [4, 10]])
-        #makespan.fillPriorityList()
+        if tree1valid and tree2valid:
+            evolution = evolutionOperationClass.evolutionOperations()
+            evolution.makeEvolution([treeInstance1, treeInstance2], [[10, 15, 20, 8], [17, 7, 6, 25]])
+        else:
+            print(f"Einer der Bäume ist ungültig!")
 
 if __name__ == '__main__':
     out()

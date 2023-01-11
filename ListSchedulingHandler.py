@@ -89,7 +89,10 @@ class ListSchedulingHandler():
             self.rangeValues = self.calculateRange(self.arrayOfValues)
         if "V" in operations:
             self.varianzValues = self.calculateVarianz(self.arrayOfValues)
-        #print(f"Operations: {operations}")
+        if hasattr(self, "varianzValues"):
+            print(f"Varianz: {str(self.varianzValues)}")
+        if hasattr(self, "rangeValues"):
+            print(f"Range: {str(self.rangeValues)}")
         valueString = ""
         for machine in range(len(self.arrayOfValues)):
             for job in range(len(self.arrayOfValues[0])):
@@ -97,16 +100,12 @@ class ListSchedulingHandler():
                 value = self.calculatePriorityLevel(machine, job)
                 tempDict[operationString] = value
                 valueString += f"{operationString}: {str(value)}; "
-        print(valueString)
+        #print(valueString)
         sortedValueDict = sorted(tempDict.values(), reverse=True)
         for value in sortedValueDict:
             self.priorityList.update({key: value for key, val in tempDict.items() if val == value})
         tempDict.clear()
         print(f"Priority List: {str(self.getPriorityList())}")
-        if hasattr(self, "varianzValues"):
-            print(f"Varianz: {str(self.varianzValues)}")
-        if hasattr(self, "rangeValues"):
-            print(f"Range: {str(self.rangeValues)}")
 
     # Calculate the makespan of n Jobs on m maschines
     def calculateMakeSpan(self):
@@ -128,6 +127,6 @@ class ListSchedulingHandler():
             currentCount[machine-1] = tempJobEnd
             jobsStart[job] = tempJobStart
             jobsEnd[job] = tempJobEnd
-        print(f"Maschinen: {str(currentCount)}")
+        print(f"----> Maschinen: {str(currentCount)}")
         self.priorityList = {}
         return max(currentCount)

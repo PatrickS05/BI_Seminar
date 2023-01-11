@@ -17,6 +17,7 @@ class evolutionOperations():
                 treeInstance1 = self.trees[j]
                 treeInstance2 = self.trees[j + 1]
                 self.crossover(treeInstance1, treeInstance2)
+                print(f"Anzahl: {str(j)}")
             print("-------------------------")
             print("MUTATION:")
             print("-------------------------")
@@ -25,8 +26,7 @@ class evolutionOperations():
             print("-------------------------")
             print("SELEKTION:")
             print("-------------------------")
-            fitnessValues = self.selection(ArraysOfValues)
-            print(f"Fitness Values: {str(fitnessValues)}")
+            self.selection(ArraysOfValues)
             print("--------------------------------------------------")
         print("--------------------------------------------------")
 
@@ -61,8 +61,8 @@ class evolutionOperations():
         treeInstances[1].insertSubtree(copy.deepcopy(subtrees[0]), copy.deepcopy(subtrees[1]), randomPosTree[1])
         self.trees.append(treeInstances[1])
         print(f"Position der Subtrees: {randomPosTree}\n")
-        print(f"Tree 1: {str(treeInstances[0])}")
-        print(f"Tree 2: {str(treeInstances[1])}")
+        #print(f"Tree 1: {str(treeInstances[0])}")
+        #print(f"Tree 2: {str(treeInstances[1])}")
         print(f"Trees: {str(self.trees)}")
 
     def mutation(self, treeInstance):
@@ -76,7 +76,7 @@ class evolutionOperations():
             else:
                 symbol = random.choice(treeInstance.getFunctionalSymbols())
             node.setNodeValue(symbol)
-            print(f"Mutation an Position {pos} mit dem Symbol {str(symbol)}:")
+            string = f"Mutation an Position {str(pos)} mit dem Symbol {str(symbol)}:"
         print(string)
 
     def selection(self, ArraysOfValues):
@@ -95,7 +95,14 @@ class evolutionOperations():
                     self.trees.append(max(fitnessValues, key=lambda fitness: fitnessValues[fitness]))
                 del fitnessValues[self.trees[i]]
             for _ in range(len(fitnessValues)//2):
-                choise1 = random.choice(fitnessValues.keys())
-                choise2 = random.choice(fitnessValues.keys())
-                self.trees.append(max(fitnessValues[choise1], fitnessValues[choise2]))
+                choice1 = random.choice(list(fitnessValues.keys()))
+                choice2 = random.choice(list(fitnessValues.keys()))
+                betterTree = self.getBetterTree(choice1, choice2, fitnessValues[choice1], fitnessValues[choice2])
+                self.trees.append(betterTree)
+
+    def getBetterTree(self, treeInstance1, treeInstance2, value1, value2):
+        if value1 < value2:
+            return treeInstance1
+        else:
+            return treeInstance2
 
